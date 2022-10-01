@@ -1,0 +1,4 @@
+FROM repo-bit:8082/docker-local/tools/maven-3.8.1-jdk11-7zip:latest
+WORKDIR /app
+COPY . .
+RUN mvn clean install -DskipTests

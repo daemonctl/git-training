@@ -1,0 +1,28 @@
+pipeline {
+    agent { label 'build' }
+    stages {
+        stage('Verify Branch')
+        {
+            steps {
+                cleanWs()
+                echo 'https://repo.anadolusigorta.com.tr/scm/sdlc/spring-petclinic.git'
+            }
+        }
+        stage('Clone Repo'){
+            steps {
+                git branch: 'war', credentialsId: '54173959-5505-4e61-bd81-5f37024e7fe1', url: 'https://repo.anadolusigorta.com.tr/scm/sdlc/spring-petclinic.git'
+            }
+        }
+        stage('SonarQube'){
+            steps{
+                powershell(script: 'docker images -a')
+                powershell"""
+                    docker images -a
+                    docker build -f Dockerfile-sonar -t petclinic-sonar .
+                    docker image rm petclinic-sonar 
+                    docker images -a
+                """
+            }
+        }
+    }
+}
